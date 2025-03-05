@@ -12,7 +12,10 @@ authClient.interceptors.response.use(
     if (error.response.status === 401 && !error.config._retry) {
       try {
         error.config._retry = true
-        console.info('refreshing token')
+        console.info('trying to refresh token')
+        if (!(await getAuthStatus()).couldBeRefreshed) {
+          return Promise.reject(error)
+        }
         await refreshToken()
         return authClient.request(error.config)
       } catch (refreshError) {
@@ -28,6 +31,10 @@ authClient.interceptors.response.use(
 async function getCsrfToken() {
   const response = await authClient.get('/csrf')
   return response.data.csrfToken
+}
+
+export async function getAuthStatus(): Promise<{ isAuth: boolean; couldBeRefreshed: boolean }> {
+  return authClient.get('/auth-status')
 }
 
 export async function loginUser(email: string, password: string) {
