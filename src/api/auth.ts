@@ -12,11 +12,14 @@ authClient.interceptors.response.use(
     if (error.response.status === 401 && !error.config._retry) {
       try {
         error.config._retry = true
-        console.info('trying to refresh token')
+
         if (!(await getAuthStatus()).data.couldBeRefreshed) {
           return Promise.reject(error)
         }
+
+        console.info('trying to refresh token')
         await refreshToken()
+
         return authClient.request(error.config)
       } catch (refreshError) {
         console.error('Failed to refresh token:', refreshError)

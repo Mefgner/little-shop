@@ -11,8 +11,8 @@
       />
     </div>
     <div class="flex size-11 items-center justify-center p-0.5 sm:size-9">
-      <button class="">
-        <img src="../../assets/imgs/favicon.ico" alt="#" />
+      <button class="cursor-pointer">
+        <img src="@/assets/imgs/favicon.ico" alt="#" />
       </button>
     </div>
   </form>
