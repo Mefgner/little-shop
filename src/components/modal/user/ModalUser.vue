@@ -5,7 +5,7 @@ import PrimaryBtn from '@/components/base/PrimaryBtn.vue'
 import UserInfo from '@/components/modal/user/parts/UserInfo.vue'
 
 const authStore = createAuth()
-const userInfo = ref<User | null>()
+const userInfo = ref<User | null | void>(null)
 const loginStage = ref(false)
 const registerStage = ref(false)
 

@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { type AxiosResponse } from 'axios'
 import type { MinimalUser, User } from '@/store/auth.ts'
 
 const authClient = axios.create({
@@ -13,7 +13,7 @@ authClient.interceptors.response.use(
       try {
         error.config._retry = true
         console.info('trying to refresh token')
-        if (!(await getAuthStatus()).couldBeRefreshed) {
+        if (!(await getAuthStatus()).data.couldBeRefreshed) {
           return Promise.reject(error)
         }
         await refreshToken()
@@ -33,7 +33,9 @@ async function getCsrfToken() {
   return response.data.csrfToken
 }
 
-export async function getAuthStatus(): Promise<{ isAuth: boolean; couldBeRefreshed: boolean }> {
+type AuthStatus = { isAuth: boolean; couldBeRefreshed: boolean }
+
+export async function getAuthStatus(): Promise<AxiosResponse<AuthStatus>> {
   return authClient.get('/auth-status')
 }
 
@@ -74,7 +76,7 @@ export async function updateUser(userInfo: User) {
   })
 }
 
-export async function getUser() {
+export async function getUser(): Promise<AxiosResponse<User>> {
   return authClient.get('/user-info')
 }
 
