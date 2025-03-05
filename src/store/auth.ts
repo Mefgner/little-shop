@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { loginUser, registerUser, updateUser, getUser, logoutUser } from '@/api/auth'
+import { getAuthStatus, getUser, loginUser, logoutUser, registerUser, updateUser } from '@/api/auth'
 
 type MinimalUser = {
   id: number
@@ -25,63 +25,71 @@ export type { MinimalUser, User }
 export default defineStore('auth', () => {
   const user = ref<User | null>()
 
-  function errorCatcher<T>(p: Promise<T>) {
-    return p.catch((error) => {
-      console.log('Error occurred: ', error?.status)
-      return Promise.reject(error)
-    })
+  function loginRequired<T, A>(fn: (args: A) => Promise<T> | void | null) {
+    return function (args: A) {
+      return new Promise(async (resolve, reject) => {
+        const authStatus = await getAuthStatus()
+        if (authStatus.isAuth) {
+          resolve(fn(args))
+        } else {
+          reject(new Error('Not authorized'))
+        }
+      }).catch((err) => {
+        console.info(err.message)
+      })
+    }
   }
 
-  function login(email: string, password: string) {
+  const _login = (email: string, password: string) => {
     console.info('login user')
     let res = null
-    errorCatcher(loginUser(email, password)).then((response) => {
+    loginUser(email, password).then((response) => {
       res = response.data
     })
     return res
   }
 
-  function logout() {
+  const _logout = () => {
     console.info('logout user')
     user.value = null
-    errorCatcher(logoutUser()).then(() => {
+    logoutUser().then(() => {
       console.info('logout success')
     })
   }
 
-  function register(user: MinimalUser) {
+  const _register = (user: MinimalUser) => {
     console.info('register user')
     let res = null
-    errorCatcher(registerUser(user)).then((response) => {
+    registerUser(user).then((response) => {
       res = response.data
     })
     return res
   }
 
-  function update(user: User) {
+  const _update = (user: User) => {
     console.info('update user')
     let res = null
-    errorCatcher(updateUser(user)).then((response) => {
+    updateUser(user).then((response) => {
       res = response.data
     })
     return res
   }
 
-  async function getUserData() {
+  const _getUserData = async () => {
     console.info('get user data')
 
     if (user.value) return user.value
 
-    const res = await errorCatcher(getUser())
+    const res = await getUser()
     user.value = res.data
     return user.value
   }
 
   return {
-    login,
-    logout,
-    register,
-    update,
-    getUserData,
+    login: _login,
+    logout: loginRequired(_logout),
+    register: _register,
+    update: loginRequired(_update),
+    getUserData: loginRequired(_getUserData),
   }
 })
