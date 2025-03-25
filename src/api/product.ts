@@ -38,8 +38,12 @@ export function fetchProducts(): Promise<AxiosResponse<FullProduct[]>> {
   return apiClient.get('api/products')
 }
 
-export function fetchSimplifiedProducts(): Promise<AxiosResponse<Product[]>> {
-  return apiClient.get('api/products/simplified')
+export function fetchSimplifiedProducts(query?: string): Promise<AxiosResponse<Product[]>> {
+  return apiClient.get(`api/products/simplified`, {
+    params: {
+      query: query,
+    },
+  })
 }
 
 export function fetchProduct(id: number): Promise<AxiosResponse<FullProduct>> {
