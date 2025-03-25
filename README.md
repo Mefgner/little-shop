@@ -1,39 +1,14 @@
 # little_shop
 
-This template should help get you started developing with Vue 3 in Vite.
+### Vue and Express e-commerce project i wrote as a pet one.
+### Also were used vue-router and pinia; MySQL; Stripe; JWT Auth.
 
-## Recommended IDE Setup
+Writing this project i've learned a lot of things such a 
+Composition API use, using composables, routing, token based protection, stripe webhooks, 
+static file manipulation, REST, bd migrations, using separated environments and etc...
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+## How to run it?
+ - You need to have a mysql server (mariaDB), and set to .env auth settings.
+ - Stripe cli or stripe global webhook registration.
+ - Install packages: in each folder(client, server) type `npm install`
+ - Then just `.\run.ps1` in your powershell console.
