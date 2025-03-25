@@ -28,52 +28,46 @@ export default defineStore('auth', () => {
   const user = ref<User | null>()
 
   const _login = async (email: string, password: string) => {
-    console.debug('login user')
     try {
       return await loginUser(email, password)
     } catch (e) {
-      throw e
+      throw new Error('Failed to login')
     }
   }
 
   const _logout = async () => {
-    console.debug('logout user')
     user.value = null
     try {
       return await logoutUser()
     } catch (e) {
-      throw e
+      throw new Error('Failed to logout')
     }
   }
 
   const _register = async (user: MinimalUser | User) => {
-    console.debug('register user')
     try {
       return await registerUser(user)
     } catch (e) {
-      throw e
+      throw new Error('Failed to register new user')
     }
   }
 
   const _update = async (user: User) => {
-    console.debug('update user')
     try {
       return await updateUser(user)
     } catch (e) {
-      throw e
+      throw new Error('Failed to login')
     }
   }
 
   const _getUserData = async () => {
-    console.debug('get user data')
-
     if (user.value) return user.value
 
     try {
       const response = await getUser()
       user.value = response.data
     } catch (e) {
-      throw e
+      throw new Error('Failed to get user data')
     }
   }
 
