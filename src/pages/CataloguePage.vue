@@ -4,7 +4,7 @@ import ButtonPillow from '@/components/base/ButtonPillow.vue'
 import CardBase from '@/components/base/CardBase.vue'
 import FooterComponent from '@/components/FooterComponent.vue'
 
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import useProducts from '@/store/products.ts'
 import type { Product } from '@/api/product.ts'
@@ -20,9 +20,19 @@ const sortButtons = ref([
   { text: 'Newest', func: () => (currentSort.value = 'newest') },
 ])
 
-onMounted(async () => {
-  products.value = await usedProducts.getSimplifiedProducts()
+async function getProducts(query: string) {
+  products.value = await usedProducts.getSimplifiedProducts(query || '')
+}
+
+onMounted(() => {
+  const query = router.currentRoute.value.query.query as string
+  getProducts(query)
 })
+
+watch(
+  () => router.currentRoute.value.query.query,
+  (query) => getProducts(query as string),
+)
 
 const sortedItems = computed(() => {
   if (!Array.isArray(products.value)) {
@@ -45,10 +55,10 @@ const sortedItems = computed(() => {
 
 <template>
   <ModalNav />
-  <main class="px-9">
+  <main class="grow px-9">
     <div class="container mx-auto py-6">
       <div class="flex flex-wrap justify-center *:m-2">
-        <ButtonPillow :buttons="sortButtons" :radio-alike="true" />
+        <ButtonPillow :buttons="sortButtons" :radio-alike="true" :defaultIndex="2" />
       </div>
     </div>
     <div class="mx-auto grid w-fit grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">

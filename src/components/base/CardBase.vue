@@ -13,7 +13,7 @@ const props = defineProps<{
   <a
     href=""
     @click="props.handler()"
-    class="flex flex-col justify-between rounded-lg border-2 border-gray-100 bg-white p-6 sm:w-fit dark:border-gray-800 dark:bg-gray-900"
+    class="flex flex-col justify-between rounded-lg border-2 border-gray-100 bg-white p-6 transition hover:shadow sm:w-fit dark:border-gray-800 dark:bg-gray-900"
   >
     <img
       :src="props.img"

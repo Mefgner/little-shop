@@ -3,6 +3,8 @@ import Cookies from 'js-cookie'
 import { defineStore } from 'pinia'
 import type { Product } from '@/api/product.ts'
 
+export type Cart = { count: number; value: Product }[]
+
 export default defineStore('cart', () => {
   const cart = ref<Product[]>(JSON.parse(Cookies.get('cart') || '[]'))
 

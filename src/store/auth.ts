@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { getAuthStatus, getUser, loginUser, logoutUser, registerUser, updateUser } from '@/api/auth'
+import { getUser, loginUser, logoutUser, registerUser, updateUser } from '@/api/auth'
+import { loginRequired } from '@/api/utils'
+import type { AxiosResponse } from 'axios'
 
 type MinimalUser = {
   id: number
@@ -25,76 +27,56 @@ export type { MinimalUser, User }
 export default defineStore('auth', () => {
   const user = ref<User | null>()
 
-  function loginRequired<T, A>(fn: (...args: A[]) => Promise<T> | T) {
-    return function (...args: A[]): Promise<T | void> {
-      return new Promise<T>(async (resolve, reject) => {
-        const authStatus = (await getAuthStatus()).data
-        console.log('authStatus', authStatus)
-        if (authStatus.isAuth) {
-          try {
-            resolve(await fn(...args))
-          } catch (error) {
-            reject(error)
-          }
-        } else {
-          reject(new Error('Not logged in'))
-        }
-      }).catch((err) => {
-        console.info(err)
-      })
+  const _login = async (email: string, password: string) => {
+    try {
+      return await loginUser(email, password)
+    } catch (e) {
+      throw new Error('Failed to login')
     }
   }
 
-  const _login = (email: string, password: string) => {
-    console.info('login user')
-    let res = null
-    loginUser(email, password).then((response) => {
-      res = response.data
-    })
-    return res
-  }
-
-  const _logout = () => {
-    console.info('logout user')
+  const _logout = async () => {
     user.value = null
-    logoutUser().then(() => {
-      console.info('logout success')
-    })
+    try {
+      return await logoutUser()
+    } catch (e) {
+      throw new Error('Failed to logout')
+    }
   }
 
-  const _register = (user: MinimalUser) => {
-    console.info('register user')
-    let res = null
-    registerUser(user).then((response) => {
-      res = response.data
-    })
-    return res
+  const _register = async (user: MinimalUser | User) => {
+    try {
+      return await registerUser(user)
+    } catch (e) {
+      throw new Error('Failed to register new user')
+    }
   }
 
-  const _update = (user: User) => {
-    console.info('update user')
-    let res = null
-    updateUser(user).then((response) => {
-      res = response.data
-    })
-    return res
+  const _update = async (user: User) => {
+    try {
+      return await updateUser(user)
+    } catch (e) {
+      throw new Error('Failed to login')
+    }
   }
 
   const _getUserData = async () => {
-    console.info('get user data')
-
     if (user.value) return user.value
 
-    const res = await getUser()
-    user.value = res.data
-    return user.value
+    try {
+      const response = await getUser()
+      user.value = response.data
+    } catch (e) {
+      throw new Error('Failed to get user data')
+    }
   }
 
   return {
+    user: user,
     login: _login,
-    logout: loginRequired<void, never>(_logout),
+    logout: loginRequired<Promise<AxiosResponse>, never>(_logout),
     register: _register,
-    update: loginRequired<null, never>(_update),
-    getUserData: loginRequired<User, never>(_getUserData),
+    update: loginRequired<Promise<AxiosResponse>, never>(_update),
+    getUserData: loginRequired(_getUserData),
   }
 })
