@@ -11,9 +11,14 @@ const props = defineProps({
     default: false,
     required: false,
   },
+  defaultIndex: {
+    type: Number,
+    default: 0,
+    required: false,
+  },
 })
 
-const activeBtnId = ref<number | undefined>(undefined)
+const activeBtnId = ref<number | undefined>(props.defaultIndex)
 
 const selectButton = function (index: number, func: () => void) {
   activeBtnId.value = props.radioAlike ? index : undefined
@@ -34,7 +39,7 @@ const selectButton = function (index: number, func: () => void) {
       v-for="(button, index) in props.buttons"
       @click="selectButton(index, button.func)"
     >
-      <div class="mt-[-2px]">{{ button.text }}</div>
+      <span class="mt-[-2px]">{{ button.text }}</span>
     </button>
   </div>
 </template>
