@@ -1,13 +1,20 @@
-import { getAuthStatus } from '@/api/auth.ts'
+import { getAuthStatus, refreshToken } from '@/api/auth.ts'
 
-// decorator used to stop brutforcing
+// decorator used to stop bruteforce
 export function loginRequired<T, A>(fn: (...args: A[]) => Promise<T> | T) {
-  return function (...args: A[]): Promise<T | void> {
+  return async function (...args: A[]): Promise<T | void> {
     return new Promise<T>(async (resolve, reject) => {
       const authStatus = (await getAuthStatus()).data
-      console.log('authStatus', authStatus)
+      // console.info('authStatus', authStatus)
       if (authStatus.isAuth) {
         try {
+          resolve(await fn(...args))
+        } catch (error) {
+          reject(error)
+        }
+      } else if (authStatus.couldBeRefreshed) {
+        try {
+          await refreshToken()
           resolve(await fn(...args))
         } catch (error) {
           reject(error)
@@ -16,7 +23,7 @@ export function loginRequired<T, A>(fn: (...args: A[]) => Promise<T> | T) {
         reject(new Error('Not logged in'))
       }
     }).catch((err) => {
-      console.info(err)
+      console.debug(err)
     })
   }
 }
