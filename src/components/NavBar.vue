@@ -19,9 +19,6 @@ import SquareBtn from '@/components/base/SquareBtn.vue'
       <SquareBtn @click="$emit('showCart')">
         <img src="@/assets/imgs/icons8-cart-30.png" class="dark:invert" alt="Cart" />
       </SquareBtn>
-      <SquareBtn @click="$emit('showSettings')">
-        <img src="@/assets/imgs/icons8-settings-30.png" class="dark:invert" alt="Settings" />
-      </SquareBtn>
     </div>
   </nav>
 </template>
