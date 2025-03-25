@@ -7,15 +7,16 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueDevTools(), tailwindcss()],
+  plugins: [vue(), tailwindcss()],
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:4200',
+        target: 'http://26.213.190.232:4200/',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
     },
+    host: true,
   },
   resolve: {
     alias: {
