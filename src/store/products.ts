@@ -8,25 +8,22 @@ import {
 } from '@/api/product.ts'
 
 export default defineStore('products', () => {
-  // const products = ref<FullProduct[]>([])
-  // const initProducts = async () => {
-  //   products.value = await fetchProducts()
-  // }
-
   const getProducts = async () => {
     const response = await fetchProducts()
     if (response.status !== 200) {
-      return []
+      throw new Error('Products not found')
     }
     return response.data
   }
-  const getSimplifiedProducts = async (): Promise<Product[]> => {
-    const response = await fetchSimplifiedProducts()
+
+  const getSimplifiedProducts = async (query: string): Promise<Product[]> => {
+    const response = await fetchSimplifiedProducts(query)
     if (response.status !== 200) {
-      return []
+      throw new Error('Products not found')
     }
     return response.data
   }
+
   const getProduct = async (id: number): Promise<FullProduct> => {
     const response = await fetchProduct(id)
     if (response.status !== 200) {
@@ -34,9 +31,11 @@ export default defineStore('products', () => {
     }
     return response.data
   }
+
   const getFullImgLink = (product: Product): string => {
     return import.meta.env.VITE_API_HOST + product.photoUrl
   }
+
   const simplifyProduct = (product: FullProduct): Product => {
     return {
       id: product.id,
@@ -45,8 +44,6 @@ export default defineStore('products', () => {
       photoUrl: product.photoUrl,
     }
   }
-
-  // initProducts()
 
   return {
     getProducts,
