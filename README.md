@@ -1,39 +1,9 @@
-# little_shop
+# Little Shop
 
-This template should help get you started developing with Vue 3 in Vite.
+A small full-stack e-commerce application featuring a product catalogue, user authentication, a shopping cart, order management, and Stripe Checkout integration. The Vue frontend communicates with an Express REST API, while Prisma and MySQL handle data persistence.
 
-## Recommended IDE Setup
+## Why I built it
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+I created this project to deepen my full-stack development skills and better understand how RESTful APIs connect a frontend with backend services. It also gave me hands-on experience with authentication, application state, relational data modelling, order and payment flows, and using TypeScript across both sides of an application.
 
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+`Vue 3` · `TypeScript` · `Vite` · `Pinia` · `Tailwind CSS` · `Axios` · `Express` · `Prisma` · `MySQL` · `Stripe`
